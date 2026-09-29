@@ -12,11 +12,6 @@ A hero-themed retrospective board for agile teams. Each sprint is a mission: the
 | CSS3 | Layout with grid and flexbox, light and dark themes with custom properties |
 | JavaScript (ES2020) | App logic: board state, stacking, voting, timers and exports |
 | React 18 + htm | UI components without a build step |
-| jsPDF | The downloadable PDF mission report |
-| Google Fonts | Big Shoulders Display, Public Sans and IBM Plex Mono |
-| localStorage | Saving boards in the browser |
-| GitHub Pages | Hosting |
-| Claude Code | Development |
 
 ## The four sections
 

@@ -410,7 +410,6 @@ main { padding-bottom: 8px; }
 .about p { margin: 0; max-width: 68ch; }
 .tech { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .tech li { font-family: var(--font-mono); font-size: 12px; font-weight: 500; color: var(--ink); background: var(--surface); border: 1px solid var(--line-2); border-radius: 999px; padding: 3px 10px; }
-.about .about-note { margin-top: 10px; font-size: 13px; color: var(--ink-3); }
 @media (prefers-reduced-motion: reduce) {
   .timer.is-up .timer-face, .writing-dots i { animation: none; }
   .btn { transition: none; }

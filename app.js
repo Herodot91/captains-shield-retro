@@ -1194,7 +1194,7 @@
   }
 
   // ---------- About ----------
-  const TECH = ['HTML5', 'CSS3', 'JavaScript (ES2020)', 'React 18', 'htm', 'jsPDF', 'Google Fonts'];
+  const TECH = ['HTML5', 'CSS3', 'JavaScript (ES2020)', 'React 18', 'htm'];
   function About() {
     return html`<footer className="about">
       <div>
@@ -1204,9 +1204,6 @@
       <div>
         <h2 className="about-title">Built with</h2>
         <ul className="tech">${TECH.map((t) => html`<li key=${t}>${t}</li>`)}</ul>
-        <p className="about-note">${STANDALONE
-          ? 'Developed with Claude Code and hosted on GitHub Pages. Boards are saved in the browser with localStorage.'
-          : 'Developed with Claude Code. Runs as a Claude artifact with shared storage, live presence and viewer identity.'}</p>
       </div>
     </footer>`;
   }
