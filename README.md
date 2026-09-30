@@ -1,8 +1,23 @@
 # Captain's Shield Retro
 
-A hero-themed retrospective board for agile teams. Each sprint is a mission: the squad checks in, reports what protected and strengthened them, names the threats, votes with stars and leaves with mission orders and a PDF report. The format is inspired by TeamRetro's Captain America Agile Mission Retrospective template.
+A simple online board for a team meeting where you look back on the last few weeks of work and agree on what to do better next time. Teams often call this meeting a retrospective (or retro for short). The superhero theme is there to make the meeting more fun. The format is inspired by TeamRetro's Captain America Agile Mission Retrospective template.
 
 **Live site:** https://herodot91.github.io/captains-shield-retro/
+
+## How to use it
+
+One person, the facilitator, runs the meeting on a shared screen and moves the team through six steps:
+
+1. **Check in** (about 5 minutes): everyone says how they feel today, and the team checks whether the tasks from last time got done.
+2. **Write notes** (about 15 minutes): each person writes short notes in four boxes: what helped us, what we did well, what caused problems, and ideas for next time. Other people's notes stay hidden until everyone has finished.
+3. **Read and group** (about 10 minutes): all notes are shown. Put notes that say the same thing together.
+4. **Vote** (about 5 minutes): everyone gets 3 stars to give to the notes that matter most.
+5. **Make a plan** (about 10 minutes): turn the top notes into tasks. Each task gets one person responsible and a due date.
+6. **Say thanks** (about 5 minutes): thank the teammates who helped, then download or copy a summary of the meeting.
+
+Each step has an optional countdown timer, and you can choose to hide who wrote each note.
+
+**The superhero words:** a *mission* is one meeting, *heroes* are team members, *stars* are votes, and *mission orders* are the tasks you agree to do.
 
 ## Built with
 
@@ -13,29 +28,20 @@ A hero-themed retrospective board for agile teams. Each sprint is a mission: the
 | JavaScript (ES2020) | App logic: board state, stacking, voting, timers and exports |
 | React 18 + htm | UI components without a build step |
 
-## The four sections
+## The four boxes
 
-| Section | Question |
-| --- | --- |
-| The Shield | What protected us? |
-| Super-Soldier Serum | What made us stronger? |
-| Hydra | What threatened the mission? |
-| Next Mission | What should we do next? |
+| Box on the board | Question on the board | In plain words |
+| --- | --- | --- |
+| The Shield | What protected us? | What helped us |
+| Super-Soldier Serum | What made us stronger? | What we did well |
+| Hydra | What threatened the mission? | What caused problems |
+| Next Mission | What should we do next? | Ideas for next time |
 
-## How a retro runs
-
-1. **Assemble** (5 min): check in with a readiness level and review the orders from the last mission.
-2. **Report in** (15 min): write notes in all four sections. Other people's notes show as classified until the debrief.
-3. **Debrief** (10 min): reveal the notes and stack similar ones, by drag and drop or with the Stack button.
-4. **Vote** (5 min): each hero gets 3 stars. Totals stay sealed until planning.
-5. **Plan the mission** (10 min): discuss items in star order and turn them into mission orders with an owner and a due date.
-6. **Salute** (5 min): thank people in the Hall of Heroes, then copy the summary or download the PDF mission report.
-
-Each stage has an optional countdown timer, and a mission can hide who wrote each note.
+The six steps also have themed names in the app: Assemble, Report in, Debrief, Vote, Plan the mission and Salute.
 
 ## Two ways to run it
 
-- **This GitHub Pages copy** runs entirely in the browser. Missions, notes, votes and orders are saved in that browser's local storage, so run the retro from one shared screen: the facilitator drives and the team calls out their notes. **Reset to the examples** restores the demo missions.
+- **This website** saves everything in your browser only, so run the meeting from one shared screen: the facilitator types and the team calls out their notes. **Reset to the examples** brings back the demo meetings.
 - **The Claude-hosted version** (a claude.ai artifact) adds live multi-device features: everyone writes and votes from their own device, notes stay hidden until the reveal, you can see who is online and typing, and only people who can edit the page get the facilitator controls.
 
 ## Project files

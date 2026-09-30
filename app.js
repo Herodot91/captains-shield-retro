@@ -36,6 +36,7 @@
   // True when the page runs as a plain website (for example GitHub Pages) instead of inside Claude.
   const STANDALONE = !(window.claude && typeof window.claude.use === 'function');
   const LS_DEMO = 'captains-shield.board';
+  const LS_GUIDE = 'captains-shield.guide';
   const LS_MISSION = 'captains-shield.mission';
   const FACIL_MSG = 'Only people who can edit this page can run the mission controls.';
   const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
@@ -463,7 +464,7 @@
     </div>`;
   }
   function TopBar() {
-    const { mission, missionsSorted, missionId, selectMission, me, readOnly, setDialog } = useApp();
+    const { mission, missionsSorted, missionId, selectMission, me, readOnly, setDialog, guideOpen, showGuide } = useApp();
     const facil = me.facilitator && !readOnly;
     return html`<header className="topbar">
       <div className="wrap topbar-in">
@@ -479,6 +480,7 @@
         </div>
         <div className="topbar-tools">
           <${Presence} />
+          ${!guideOpen && html`<button type="button" className="btn btn-on-navy" onClick=${showGuide}>How it works</button>`}
           ${missionsSorted.length > 0 && html`<div>
             <label className="sr-only" htmlFor="mission-select">Open a mission</label>
             <select id="mission-select" className="select-navy" value=${missionId || ''} onChange=${(e) => selectMission(e.target.value)}>
@@ -1193,13 +1195,49 @@
     </section>`;
   }
 
+  // ---------- Plain-language guide ----------
+  const GUIDE_STEPS = [
+    ['Check in', 'Everyone says how they feel today, and the team checks whether the tasks from last time got done.'],
+    ['Write notes', "Each person writes short notes in four boxes: what helped us, what we did well, what caused problems, and ideas for next time. Other people's notes stay hidden until everyone has finished."],
+    ['Read and group', 'All notes are shown. Put notes that say the same thing together.'],
+    ['Vote', 'Everyone gets 3 stars to give to the notes that matter most.'],
+    ['Make a plan', 'Turn the top notes into tasks. Each task gets one person responsible and a due date.'],
+    ['Say thanks', 'Thank the teammates who helped, then download or copy a summary of the meeting.'],
+  ];
+  const GLOSSARY = [
+    ['Mission', 'one meeting'],
+    ['Heroes', 'team members'],
+    ['Stars', 'votes'],
+    ['Mission orders', 'tasks to do'],
+    ['Facilitator', 'the person running the meeting'],
+  ];
+  function Guide({ onHide }) {
+    return html`<section className="guide" aria-labelledby="guide-title">
+      <div className="guide-head">
+        <h2 className="guide-title" id="guide-title">How this works</h2>
+        <button type="button" className="btn btn-quiet btn-sm" onClick=${onHide}>Hide guide</button>
+      </div>
+      <div>
+        <p><strong>What is it?</strong> A simple online board for a team meeting where you look back on the last few weeks of work and agree on what to do better next time. Teams often call this meeting a retrospective (or retro for short).</p>
+        <p>${STANDALONE
+          ? 'One person runs the meeting on a shared screen and moves the team from step to step. Everything is saved in this browser only.'
+          : 'One person runs the meeting and moves everyone from step to step. Everyone else joins from their own device.'}</p>
+        <p className="guide-label">The superhero words</p>
+        <ul className="glossary">${GLOSSARY.map((g) => html`<li key=${g[0]}><strong>${g[0]}</strong> means ${g[1]}</li>`)}</ul>
+      </div>
+      <ol className="guide-steps">
+        ${GUIDE_STEPS.map((s) => html`<li key=${s[0]}><strong>${s[0]}.</strong> ${s[1]}</li>`)}
+      </ol>
+    </section>`;
+  }
+
   // ---------- About ----------
   const TECH = ['HTML5', 'CSS3', 'JavaScript (ES2020)', 'React 18', 'htm'];
   function About() {
     return html`<footer className="about">
       <div>
         <h2 className="about-title">About this project</h2>
-        <p>Captain's Shield Retro is a hero-themed retrospective board for agile teams. Each sprint is a mission: the squad checks in, reports what protected and strengthened them, names the threats, votes with stars and leaves with mission orders and a PDF report. The format is inspired by TeamRetro's Captain America Agile Mission Retrospective template.</p>
+        <p>Captain's Shield Retro is a free online board for team meetings where you look back on recent work. The team writes short notes about what went well and what went wrong, votes on the most important ones, and leaves with a short list of tasks, each with a person responsible. The superhero theme is there to make the meeting more fun. It is inspired by TeamRetro's Captain America Agile Mission Retrospective template.</p>
       </div>
       <div>
         <h2 className="about-title">Built with</h2>
@@ -1230,6 +1268,9 @@
     const [toast, setToast] = useState(null);
     const [ui, setUiState] = useState({ stackSource: null });
     const [exporting, setExporting] = useState(false);
+    const [guideOpen, setGuideOpen] = useState(() => lsGet(LS_GUIDE) !== 'hidden');
+    const hideGuide = useCallback(() => { setGuideOpen(false); lsSet(LS_GUIDE, 'hidden'); }, []);
+    const showGuide = useCallback(() => { setGuideOpen(true); lsSet(LS_GUIDE, null); }, []);
 
     const myHeroRef = useRef(null);
     const heroPending = useRef(0);
@@ -1633,7 +1674,7 @@
     const ctx = {
       mode, me, readOnly, mission, missionId, missionsSorted, missionsById, selectMission, stage, stageDef, act, ui, setUi, setDialog, showToast,
       sectionsWithItems, ranked, liveCards, cardsReady, cardsById, voteTotals, totalStars, myVoteSet, starsLeft, starsPer, heroes,
-      orders, ordersHere, salutes: salutesHere, moodTally, peers, profiles, nameOf, heroIds, setWriting, canPdf: !!downloads || STANDALONE, exportPdf, copySummary, exporting,
+      orders, ordersHere, salutes: salutesHere, moodTally, peers, profiles, nameOf, heroIds, setWriting, canPdf: !!downloads || STANDALONE, exportPdf, copySummary, exporting, guideOpen, showGuide,
       resetBoard: () => { if (db && typeof db.reset === 'function') db.reset(); },
     };
 
@@ -1658,6 +1699,7 @@
     return html`<${Ctx.Provider} value=${ctx}>
       <${TopBar} />
       <div className="wrap">
+        ${guideOpen && html`<${Guide} onHide=${hideGuide} />`}
         ${mode === 'practice' && STANDALONE && html`<div className="banner"><span className="banner-tag">Browser copy</span><span>Everything you add is saved in this browser only, so run the retro from one shared screen.</span><button type="button" className="link-btn" onClick=${() => setDialog({ type: 'reset' })}>Reset to the examples</button></div>`}
         ${mode === 'practice' && !STANDALONE && html`<div className="banner"><span className="banner-tag">Practice mode</span><span>This view can't reach shared storage, so changes stay in this tab. Open the published page to run a live retro with your squad.</span></div>`}
         ${readOnly && html`<div className="banner"><span className="banner-tag">View only</span><span>You can follow this mission, but you can't add notes or vote. Ask the owner for Contributor access.</span></div>`}
